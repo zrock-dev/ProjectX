@@ -1,3 +1,4 @@
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
@@ -17,6 +18,10 @@ public class Boleteria {
 
     enum MetodoPago{
         TARJETA, QR, EFECTIVO
+    }
+
+    public Collection<Cliente> getRegistroClientes() {
+        return registroClientes.values();
     }
 
     public void comprarBoleto(Cliente  cliente, String generoPelicula, double precioPelicula,

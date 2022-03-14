@@ -1,13 +1,10 @@
-import java.util.Arrays;
-import java.util.Hashtable;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 public class Sala {
     int capacidad;
     String codigoSala;
-    Map<Cliente, String[]> butacasPorCliente;
-    Map<String, String[]> butacas;
+    Map<Cliente, ArrayList<String>> butacasPorCliente;
+    Map<String, ArrayList<String>> butacas;
     String[] carteleraSala = new String[5];
 
     public Sala(String codigoSala){
@@ -36,41 +33,38 @@ public class Sala {
         int columnas = capacidad/cantidadFilas;
         char[] columnasCodigos = Utils.generarAbc(columnas);
         for (int indexColumn = 0; indexColumn < columnas; indexColumn++) {
-            String[] codigosAsientoColumna = new String[cantidadFilas];
+            ArrayList<String> filaAsientos  = new ArrayList<>();
             String columnaLetra = String.valueOf(columnasCodigos[indexColumn]);
-            for (int indexFila = 0; indexFila < codigosAsientoColumna.length; indexFila++) {
-                codigosAsientoColumna[indexFila] = columnaLetra + (indexFila + 1);
+            for (int indexFila = 0; indexFila < cantidadFilas; indexFila++) {
+                filaAsientos.add(columnaLetra + (indexFila +1));
             }
-            butacas.put(columnaLetra, codigosAsientoColumna);
+            butacas.put(columnaLetra, filaAsientos);
         }
     }
 
-    public void showStatusAsientos(){
-        for (String[] columnaAsientos:
-             butacas.values()) {
-            System.out.println(Arrays.toString(columnaAsientos));
-        }
+    public void showStatusAsientos(Cliente cliente){
+        System.out.println(butacasPorCliente.get(cliente));
     }
 
-    public void reservarButacas(int cantidad, String codigoColumna){
+    public void reservarButacas(int cantidad, String codigoColumna, Cliente cliente){
+        ArrayList<String> asientosCliente = butacasPorCliente.get(cliente);
         if (cantidad <= 10){
-            String[] columna = butacas.get(codigoColumna);
+            ArrayList<String> columna = butacas.get(codigoColumna);
             for (int i = 0; i < cantidad; i++) {
-
-                if (!columna[i].split(":")[0].equals("X")){
-                    columna[i] = "X:" + columna[i];
-                }
+                asientosCliente.add(columna.remove(0));
             }
+            butacasPorCliente.put(cliente, asientosCliente);
         }
     }
 
     public static void main(String[] args) {
         Sala sala = new Sala("A");
+        Cliente cliente = new Cliente(1312, "santi Ago", "col",
+                                "20/04/2003");
         sala.setCapacidad(100);
         sala.poblarButacas();
-        sala.reservarButacas(3, "A");
-        sala.reservarButacas(4, "A");
-        sala.reservarButacas(4, "A");
-        sala.showStatusAsientos();
+        sala.reservarButacas(4, "B", cliente);
+        sala.reservarButacas(4, "A", cliente);
+        sala.showStatusAsientos(cliente);
     }
 }
