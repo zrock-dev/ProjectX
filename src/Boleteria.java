@@ -1,13 +1,11 @@
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Map;
+import java.util.*;
 
 public class Boleteria {
+    String name;
     Map<String, Sala> salaMap;
     Map<Integer, Cliente> registroClientes;
-    String name;
     Map<Sala,String[]> peliculasDia;
+    int precioPelicula;
 
     public Boleteria(String name) {
         salaMap = new HashMap<>();
@@ -20,22 +18,31 @@ public class Boleteria {
         TARJETA, QR, EFECTIVO
     }
 
-    public Collection<Cliente> getRegistroClientes() {
-        return registroClientes.values();
+    enum ModoPresentacion{
+        BIDIMENSIONAL, TRIDIMENSIONAL
     }
 
-    public void comprarBoleto(Cliente  cliente, String generoPelicula, double precioPelicula,
-                              MetodoPago metodo){
-        int edadCliente = cliente.getEdad();
-        if (edadCliente >= 60){
-            precioPelicula -= (precioPelicula * .5);
-        }else if (edadCliente <= 10 && generoPelicula.equals("animacion")){
-            precioPelicula -= (precioPelicula * .15);
-        }
+    public double getPrecioPelicula() {
+        return precioPelicula;
+    }
 
-        if (metodo == MetodoPago.TARJETA){
-            precioPelicula -= precioPelicula * .12;
+    public void elegirModoPresentacion(ModoPresentacion modo){
+        switch (modo){
+            case BIDIMENSIONAL:
+                precioPelicula = 40;
+                break;
+            case TRIDIMENSIONAL:
+                precioPelicula = 50;
+                break;
         }
+    }
+
+
+    public void comprarBoleto(int ci, MetodoPago metodo, String columnaAsiento, int cantidadAsientos,
+                              String codigoSala){
+        Boleto boleto = new Boleto(registroClientes.get(ci), precioPelicula, salaMap.get(codigoSala));
+        boleto.aplicarDescuento(metodo);
+        boleto.comprarAsientos(columnaAsiento, cantidadAsientos);
     }
 
     public void registrarCliente(int ci, String fullName, String nacionalidad, String fechaNacimiento){
@@ -43,10 +50,18 @@ public class Boleteria {
         registroClientes.put(ci, cliente);
     }
 
-    public void tomarCarteleraSala(){
+    public void tomarCartelerasSalas(){
         for (Sala sala:
              salaMap.values()) {
             peliculasDia.put(sala, sala.getCarteleraSala());
+        }
+    }
+
+    public void showCartelera(){
+        tomarCartelerasSalas();
+        for (String[] carteleraSala:
+             peliculasDia.values()) {
+            System.out.println(Arrays.toString(carteleraSala));
         }
     }
 
@@ -55,6 +70,7 @@ public class Boleteria {
         for (int i = 0; i < cantidad; i++){
             String letra = String.valueOf(letras[i]);
             Sala sala = new Sala(letra);
+            sala.llenarCarteleraSala();
             salaMap.put(letra, sala);
         }
     }

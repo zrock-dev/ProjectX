@@ -9,6 +9,7 @@ public class Sala {
     public Sala(String codigoSala){
         butacas = new Hashtable<>();
         this.codigoSala = codigoSala;
+        llenarCarteleraSala();
     }
 
     public String[] getCarteleraSala() {
@@ -17,6 +18,7 @@ public class Sala {
 
     public void setCapacidad(int capacidad) {
         this.capacidad = capacidad/10;
+        generarButacas();
     }
 
     public void llenarCarteleraSala(){
