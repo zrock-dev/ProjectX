@@ -1,6 +1,9 @@
 public class Utils {
-    static String[] generosPelicula = {"Accion", "Animacion", "Ciencia Ficcion", "Comedia", "Drama", "Fantasia",
-                                "Musical", "Romance", "Suspenso", "Terror", "Documental"};
+    static String[] generosPelicula = {
+                                "Accion", "Animacion", "Ciencia Ficcion",
+                                "Comedia", "Drama", "Fantasia",
+                                "Musical", "Romance", "Suspenso",
+                                "Terror", "Documental"};
 
     public static char[] generarAbc(int cantidadLetras){
         char[] abecedario = new char[cantidadLetras];

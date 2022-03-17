@@ -39,9 +39,9 @@ public class Boleteria {
 
 
     public void comprarBoleto(int ci, MetodoPago metodo, String columnaAsiento, int cantidadAsientos,
-                              String codigoSala){
+                              String codigoSala,Semana dia){
         Boleto boleto = new Boleto(registroClientes.get(ci), precioPelicula, salaMap.get(codigoSala));
-        boleto.aplicarDescuento(metodo);
+        boleto.aplicarDescuento(metodo,dia);
         boleto.comprarAsientos(columnaAsiento, cantidadAsientos);
     }
 
@@ -52,7 +52,7 @@ public class Boleteria {
 
     public void tomarCartelerasSalas(){
         for (Sala sala:
-             salaMap.values()) {
+                salaMap.values()) {
             peliculasDia.put(sala, sala.getCarteleraSala());
         }
     }
@@ -60,7 +60,7 @@ public class Boleteria {
     public void showCartelera(){
         tomarCartelerasSalas();
         for (String[] carteleraSala:
-             peliculasDia.values()) {
+                peliculasDia.values()) {
             System.out.println(Arrays.toString(carteleraSala));
         }
     }
@@ -84,4 +84,17 @@ public class Boleteria {
         salaMap.get("F").setCapacidad(50);
         salaMap.get("G").setCapacidad(50);
     }
+
+    public void comprarBoletoSinCI(MetodoPago metodo, int cantidadAsientos,String columnaAsiento,
+                                   String codigoSala, Semana dia,String name,String fechaNcimiento,ModoPresentacion modo) {
+        Cliente cliente = new Cliente(0, name, "ninguna", fechaNcimiento);
+        elegirModoPresentacion(modo);
+        Boleto boleto = new Boleto(cliente, precioPelicula, salaMap.get(codigoSala));
+        boleto.aplicarDescuento(metodo, dia);
+        precioPelicula = (int) (boleto.precioPelicula) * cantidadAsientos;
+        // el metodo comprar asientos todavia no funciona bien
+//        boleto.comprarAsientos(columnaAsiento, cantidadAsientos);
+        cliente.puntosTotales = 0;
+    }
 }
+//c

@@ -1,43 +1,57 @@
 public class Boleto {
-    int precioPelicula;
+    double precioPelicula;
     int cantidadAsientos;
     int puntosCliente = 50;
     Cliente cliente;
     Sala salaAsignada;
     String generoPelicula;
 
-    public Boleto(Cliente cliente, int precioPelicula, Sala sala){
+
+    public Boleto(Cliente cliente, double precioPelicula, Sala salaAsignada) {
         this.cliente = cliente;
         this.precioPelicula = precioPelicula;
-        this.salaAsignada = sala;
+        this.salaAsignada = salaAsignada;
+
     }
 
     public void setGeneroPelicula(String generoPelicula) {
         this.generoPelicula = generoPelicula;
     }
 
-    public void aplicarDescuento(Boleteria.MetodoPago metodo){
+    public void aplicarDescuento(Boleteria.MetodoPago metodo, Semana dia) {
         int edadCliente = cliente.getEdad();
-        if (edadCliente >= 60){
-            precioPelicula -= (precioPelicula * .5);
-            puntosCliente -= (puntosCliente *.5);
-        }else if (edadCliente <= 10 && generoPelicula.equals("Animacion")){
-            precioPelicula -= (precioPelicula * .15);
-            puntosCliente -= (puntosCliente *.5);
+
+        double precio = 0;
+        int puntos = 0;
+
+        if (metodo.equals(Boleteria.MetodoPago.TARJETA) && dia.equals(Semana.JUEVES)) {
+            precio = precioPelicula - (precioPelicula * .12);
+            puntos = (int) (50 - (50 * .12));
         }
-        if (metodo == Boleteria.MetodoPago.TARJETA){
-            precioPelicula -= precioPelicula * .12;
+        if (edadCliente <= 10 && generoPelicula.equals("Animacion")) {
+            precio = precioPelicula - (precioPelicula * .15);
+            puntos = (int) (50 - (50 * .15));
         }
-        setPuntosCliente();
+        if (dia.equals(Semana.MIERCOLES)) {
+            precio = precioPelicula - (precioPelicula * .5);
+            puntos = (int) (50 - (50 * .5));
+        }
+        if (edadCliente >= 60) {
+            precio = precioPelicula - (precioPelicula * .5);
+            puntos = (int) (50 - (50 * .5));
+        }
+
+
+        precioPelicula =precio;
+        cliente.sumarPuntos(puntos);
+
     }
+
 
     public void comprarAsientos(String columnaSala, int cantidadAsientos){
         this.cantidadAsientos = cantidadAsientos;
         salaAsignada.reservarButacas(columnaSala, cantidadAsientos);
     }
 
-    public void setPuntosCliente(){
-        cliente.sumarPuntos(puntosCliente);
-    }
 
 }
