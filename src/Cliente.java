@@ -11,7 +11,6 @@ public class Cliente {
         this.fechaNacimiento = fechaNacimiento;
     }
 
-    // nuevo parametro añadido
     public void sumarPuntos(int cantidadSumar){
         puntosTotales = cantidadSumar + puntosTotales;
     }
@@ -22,5 +21,13 @@ public class Cliente {
 
     public int getEdad() {  // edad del cliente
         return 2022 - Integer.parseInt(fechaNacimiento.split("/")[2]);
+    }
+
+    public int getPuntosTotales() {
+        return puntosTotales;
+    }
+
+    public void canjearPuntos(int puntosCanjeados){
+        puntosTotales -= puntosCanjeados;
     }
 }
